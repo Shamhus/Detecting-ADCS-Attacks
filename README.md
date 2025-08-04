@@ -887,7 +887,7 @@ PS C:\Users\Administrator> Set-AuditRule -AdObjectPath 'AD:\CN=Users,DC=purplete
 ## 13.1 Create a vulnerable template 
 
 Modify the WebServer built-in template and add, under the security tab, the right for the attacker user to read & enroll the certificate.
-![ESC15_configuration.jpg](images/ESC15_configuration.jpg)
+![ESC15_configuration.jpg](ESC15/ESC15_configuration.jpg)
 
 ## 13.2 Exploitation 
 

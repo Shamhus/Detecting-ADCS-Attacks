@@ -8,7 +8,7 @@ Those tests helped me write the article : "How to detect ADCS Attacks".
 
 I followed this [guide](https://www.virtuallyboring.com/setup-microsoft-active-directory-certificate-services-ad-cs/) to add the AD CS role to one of my domain controller. 
 
-- On the server Manager click on **Add roles and features**
+- On the Server Manager click on **Add roles and features**
 
 - Under Server Roles choose **Active Directory Certificate Services** and only choose the feature **Certification Authority** and let the others values by default
 
@@ -28,7 +28,7 @@ For our server to be able to generate ADCS related logs, we need to enable the *
 ![ActivateADCS_logs](Setup_ADCS_Role/ActivateADCS_logs.jpg)
 
 We also need to enable the logs of the ADCS object itself :
-![ADCS-Auditing-Settings](Setup_ADCS_role/ADCS-Auditing-Settings.png)
+![ADCS-Auditing-Settings](Setup_ADCS_Role/ADCS-Auditing-Settings.png)
 
 
 # 3. ESC1 

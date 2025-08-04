@@ -639,11 +639,11 @@ Certipy v5.0.3 - by Oliver Lyak (ly4k)
 ## 10.3 ADCS event logs
 
 1. 4887 
-![ESC9-4887.jpg](images/ESC9-4887.jpg)
+![ESC9-4887.jpg](ESC9/ESC9-4887.jpg)
 Seems not detectable as there is no mention of the usurpated administrator upn. The log 4886 doesn't contains any pertinent info as well.
 
 2. 5136
-![ESC9-5136.jpg](images/ESC9-5136.jpg)
+![ESC9-5136.jpg](ESC9/ESC9-5136.jpg)
 
 To be able to generate the 5136 event ID I needed to enable the **Audit Directory Service Changes**. I also need to add a SACL to monitor changes on the UserPrincipalName attribute.
 I did it using [Set-AuditRule.ps1](https://github.com/OTRF/Set-AuditRule/blob/master/Set-AuditRule.ps1) script.
@@ -865,10 +865,10 @@ Certipy v5.0.3 - by Oliver Lyak (ly4k)
 ## 12.3 Event Logs
 
 1. 4887 
-![ESC14-B_4887.jpg](images/ESC14-B_4887.jpg)
+![ESC14-B_4887.jpg](ESC14/ESC14-B_4887.jpg)
 
 2. 5136
-![ESC14_5136_mail_attribute_modification.jpg](images/ESC14_5136_mail_attribute_modification.jpg)
+![ESC14_5136_mail_attribute_modification.jpg](ESC14/ESC14_5136_mail_attribute_modification.jpg)
 
 Here also we need to add the SACL but this time on the mail attribute.
 

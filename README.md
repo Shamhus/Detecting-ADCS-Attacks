@@ -636,13 +636,11 @@ Certipy v5.0.3 - by Oliver Lyak (ly4k)
 [*] Got hash for 'administrator@purpleteam.local': aad3b435b51404eeaad3b435b51404ee:aae723d86a44672c3e7868e441f92f02
 ```
 
-## 10.3 ADCS event logs
+## 10.3 Event logs
 
-1. 4887 
 ![ESC9-4887.jpg](ESC9/ESC9-4887.jpg)
-Seems not detectable as there is no mention of the usurpated administrator upn. The log 4886 doesn't contains any pertinent info as well.
+Seems not detectable based only on the ADCS logs as there is no mention of the usurpated administrator upn. The log 4886 doesn't contains any pertinent info as well.
 
-2. 5136
 ![ESC9-5136.jpg](ESC9/ESC9-5136.jpg)
 
 To be able to generate the 5136 event ID I needed to enable the **Audit Directory Service Changes**. I also need to add a SACL to monitor changes on the UserPrincipalName attribute.
@@ -759,10 +757,12 @@ This attack generate the same log as the ESC9.
 1. Create a Universal Group
 
 ![ESC13_configuration_Group.jpg](ESC13/ESC13_configuration_Group.jpg)
+
 This group must be empty. 
 To illustrate the privilege escalation, I added a DACL to administrator account to allow the ESC13_Group to have full control over this account.
 
 2. Create an OID under the AD's configuration naming context. 
+
 The flags displayname, msDS-OIDToGroupLink and msPKI-Cert-Template-OID should be filled. 
 ```NB : For the OID we can generated a custom string such has the one here : 1.3.6.1.4.1.311.21.8.8553382.7995390.4934840.12506139.5198080.145.10460114.99027364```
 
@@ -774,7 +774,10 @@ For the **msDS-OIDToGroupLink**, the value to put is the DN of a group that will
 ![ESC13_configuration_issuancepolicy2.jpg](ESC13/ESC13_configuration_issuancepolicy2.jpg)
 
 
-3. Create the vulnerable certificate template with the InsuancePolicy we created earlier. I can just duplicate the User template and add this extension : 
+3. Create the vulnerable certificate template with the InsuancePolicy we created earlier. 
+
+I can just duplicate the User template and add this extension : 
+
 ![ESC13_configuration_certificatetemplate.jpg](ESC13/ESC13_configuration_certificatetemplate.jpg)
 
 Then I can just allow it to be enrolled by any domain users & publish this certificate template.
@@ -941,10 +944,8 @@ Certipy v5.0.3 - by Oliver Lyak (ly4k)
 
 ## 13.3 Event Logs
 
-1. 4887 
 ![ESC14-B_4887.jpg](ESC14/ESC14-B_4887.jpg)
 
-2. 5136
 ![ESC14_5136_mail_attribute_modification.jpg](ESC14/ESC14_5136_mail_attribute_modification.jpg)
 
 Here also we need to add the SACL but this time on the mail attribute.
@@ -1005,11 +1006,11 @@ File 'administrator.pfx' already exists. Overwrite? (y/n - saying no will save w
 ## 14.3 ADCS event logs
 
 For the first step there is an interesting 4886 & 4887 : 
-1. 4886
+
 ![ESC15_Step1_4886.jpg](ESC15/ESC15_Step1_4886.jpg)
 
-2. 4887
 ![ESC15_Step1_4887.jpg](ESC15/ESC15_Step1_4887.jpg)
 
 For the second step, there is an interesting 4887 : 
+
 ![ESC15_Step2_4887.jpg](ESC15/ESC15_Step2_4887.jpg)

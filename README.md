@@ -28,6 +28,7 @@ For our server to be able to generate ADCS related logs, we need to enable the *
 ![ActivateADCS_logs](Setup_ADCS_Role/ActivateADCS_logs.jpg)
 
 We also need to enable the logs of the ADCS object itself :
+
 ![ADCS-Auditing-Settings](Setup_ADCS_Role/ADCS-Auditing-Settings.png)
 
 
@@ -134,9 +135,11 @@ There is 2 possible ways to create a certificate template vulnerable to ESC3. In
 - Duplicate the **User** Certificate Template
 
 - Change the certificate template configurations to match the following
+
 ![ESC3_configuration.png](ESC3/ESC3_configuration.png)
 
 - Issue the new certificate so users can enroll it
+
 ![Issue_New_Certificate.jpng](Issue_New_Certificate.jpg)
 
 ## 5.2 Exploitation
@@ -350,6 +353,7 @@ To abuse ESC7, we need eitheir to control an account that is local admin on the 
 ## 8.1 Add ManageCA rights to the attacker account
 
 We can do it by going on the "Certificate Authority" tool, then modifying the properties of our CA to add the following permission (ManageCA) to the attacker account :
+
 ![ESC7-Configuration.jpg](ESC7/ESC7-Configuration.jpg)
 
 I also duplicated the SubCA template but without any changes (outside of the template name).

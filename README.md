@@ -67,9 +67,9 @@ Certipy v4.7.0 - by Oliver Lyak (ly4k)
 [*] Saved certificate and private key to 'administrator.pfx'
 ```
 
-## 3.3 ADCS event logs
+## 3.3 Event logs
 
-2 events are being generated : 
+2 ADCS events are being generated : 
 
 - Certificate Services received a certificate request (event id 4886)
 ![ESC1-4886.jpg](ESC1/ESC1-4886.jpg)
@@ -77,6 +77,11 @@ Certipy v4.7.0 - by Oliver Lyak (ly4k)
 - Certificate Services approved a certificate request (4887)
 ![ESC1-4887.jpg](ESC1/ESC1-4887.jpg)
 
+Note also that a 5145 event ID was generated for a RPC call made on the cert named pipe.
+
+![ESC1-5145.jpg](ESC1/ESC1-5145.jpg)
+
+This is seems to be the common behavior for all certificates requests made with certipy.
 
 # 4. ESC2 
 

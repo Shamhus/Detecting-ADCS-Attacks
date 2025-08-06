@@ -2,7 +2,7 @@
 
 This github repository contains details about how to setup environnement vulnerable to most of the ADCS escalation path existing so far. 
 It also contains details about how to exploit them, and more importantly, logs that are being generated during their exploitations. 
-Those tests helped me write the article : "How to detect ADCS Attacks". 
+Those tests helped me write the article : [How to detect ADCS Attacks](https://medium.com/@shamhus/how-to-detect-adcs-attacks-ea0c0038341a). 
 
 # 1. Add the AD CS role to a windows server
 
